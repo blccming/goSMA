@@ -10,7 +10,7 @@ import (
 	"github.com/blccming/goSMA/internal/helpers"
 )
 
-type cpuInfo struct {
+type cpuMetrics struct {
 	Model   string  `json:"model"`
 	Cores   int     `json:"cores"`
 	Threads int     `json:"threads"`
@@ -23,8 +23,8 @@ type cpuInfo struct {
 //   - Total CPU time
 //   - Idle CPU time
 func getCpuTime() (int, int) {
-	stat := string(helpers.ReadFile("/proc/stat")[:])
-	statFirstLine := strings.Split(stat, "\n")[0]
+	procStat := string(helpers.ReadFile("/proc/stat")[:])
+	statFirstLine := strings.Split(procStat, "\n")[0]
 
 	cpuTimesString := strings.Split(statFirstLine, " ")[2:] // remove "cpu" and extra space after "cpu"
 
@@ -67,15 +67,16 @@ func getCpuUsage() float32 {
 // Reads general information about the cpu from /proc/cpuinfo
 //
 // Returns:
-//   - Model (e.g. AMD Ryzen 7 5800X 8-Core Processor)
+//   - Model (e.g. "AMD Ryzen 7 5800X 8-Core Processor")
 //   - Core count
 //   - Thread count
 func getCpuInfo() (string, int, int) {
-	cpuinfo := string(helpers.ReadFile("/proc/cpuinfo"))
+	procCpuinfo := string(helpers.ReadFile("/proc/cpuinfo"))
+	procCpuInfoParts := strings.Split(procCpuinfo, "\n")
 
-	cpuinfoLineModel := strings.Split(cpuinfo, "\n")[4]
-	cpuinfoLineThreads := strings.Split(cpuinfo, "\n")[10]
-	cpuinfoLineCores := strings.Split(cpuinfo, "\n")[12]
+	cpuinfoLineModel := procCpuInfoParts[4]
+	cpuinfoLineThreads := procCpuInfoParts[10]
+	cpuinfoLineCores := procCpuInfoParts[12]
 
 	model := strings.Split(cpuinfoLineModel, ": ")[1]
 	threadsString := strings.Split(cpuinfoLineThreads, ": ")[1]
@@ -103,7 +104,7 @@ func getCpuInfo() (string, int, int) {
 func CPU() string {
 	model, threads, cores := getCpuInfo()
 
-	cpu := cpuInfo{
+	cpu := cpuMetrics{
 		Model:   model,
 		Cores:   cores,
 		Threads: threads,

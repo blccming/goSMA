@@ -8,4 +8,5 @@ import (
 
 func main() {
 	fmt.Println(metrics.CPU())
+	fmt.Println(metrics.System())
 }
