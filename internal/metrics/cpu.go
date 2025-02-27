@@ -12,8 +12,8 @@ import (
 
 type cpuInfo struct {
 	Model   string  `json:"model"`
-	Cores   int8    `json:"cores"`
-	Threads int8    `json:"threads"`
+	Cores   int     `json:"cores"`
+	Threads int     `json:"threads"`
 	Usage   float32 `json:"usage"`
 }
 
@@ -60,7 +60,40 @@ func getCpuUsage() float32 {
 	totalT2, idleT2 := getCpuTime()
 
 	usage := float32(((totalT2 - totalT1) - (idleT2 - idleT1))) / float32(totalT2-totalT1) * 100
+
 	return usage
+}
+
+// Reads general information about the cpu from /proc/cpuinfo
+//
+// Returns:
+//   - Model (e.g. AMD Ryzen 7 5800X 8-Core Processor)
+//   - Core count
+//   - Thread count
+func getCpuInfo() (string, int, int) {
+	cpuinfo := string(helpers.ReadFile("/proc/cpuinfo"))
+
+	cpuinfoLineModel := strings.Split(cpuinfo, "\n")[4]
+	cpuinfoLineThreads := strings.Split(cpuinfo, "\n")[10]
+	cpuinfoLineCores := strings.Split(cpuinfo, "\n")[12]
+
+	model := strings.Split(cpuinfoLineModel, ": ")[1]
+	threadsString := strings.Split(cpuinfoLineThreads, ": ")[1]
+	coresString := strings.Split(cpuinfoLineCores, ": ")[1]
+
+	threadsInt, err := strconv.Atoi(threadsString)
+	if err != nil {
+		helpers.LogError(fmt.Errorf("getCpuInfo(): Error while converting string to int: %w", err))
+		return model, 0, 0
+	}
+
+	coresInt, err := strconv.Atoi(coresString)
+	if err != nil {
+		helpers.LogError(fmt.Errorf("getCpuInfo(): Error while converting string to int: %w", err))
+		return model, threadsInt, 0
+	}
+
+	return model, threadsInt, coresInt
 }
 
 // Fetch CPU info from host
@@ -68,16 +101,18 @@ func getCpuUsage() float32 {
 // Returns:
 //   - JSON string including the CPU model, core count, thread count and usage percentage
 func CPU() string {
+	model, threads, cores := getCpuInfo()
+
 	cpu := cpuInfo{
-		Model:   "",
-		Cores:   0,
-		Threads: 0,
+		Model:   model,
+		Cores:   cores,
+		Threads: threads,
 		Usage:   getCpuUsage(),
 	}
 
 	jsonData, err := json.Marshal(cpu)
 	if err != nil {
-		helpers.LogError(fmt.Errorf("CPU(): Error marshalign to JSON: %w", err))
+		helpers.LogError(fmt.Errorf("CPU(): Error marshaling to JSON: %w", err))
 		return ""
 	}
 
