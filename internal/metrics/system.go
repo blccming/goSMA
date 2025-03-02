@@ -1,7 +1,6 @@
 package metrics
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -9,7 +8,7 @@ import (
 	"github.com/blccming/goSMA/internal/helpers"
 )
 
-type systemMetrics struct {
+type SystemMetrics struct {
 	Distribution string  `json:"distribution"`
 	LinuxVersion string  `json:"linux_version"`
 	Uptime       float64 `json:"uptime"`
@@ -66,19 +65,14 @@ func getUptime() float64 {
 // Fetch system info from host
 //
 // Returns:
-//   - JSON string including distribution, linux version and state (online)
-func System() string {
-	system := systemMetrics{
+//   - Struct including distribution, linux version and state (online)
+func System() SystemMetrics {
+	system := SystemMetrics{
 		Distribution: getDistribution(),
 		LinuxVersion: getLinuxVersion(),
 		Uptime:       getUptime(),
 		State:        "online",
 	}
 
-	jsonData, err := json.Marshal(system)
-	if err != nil {
-		helpers.LogError(fmt.Errorf("System(): Error marshaling to JSON: %w", err))
-	}
-
-	return string(jsonData)
+	return system
 }

@@ -1,7 +1,6 @@
 package metrics
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -10,7 +9,7 @@ import (
 	"github.com/blccming/goSMA/internal/helpers"
 )
 
-type cpuMetrics struct {
+type CpuMetrics struct {
 	Model   string  `json:"model"`
 	Cores   int     `json:"cores"`
 	Threads int     `json:"threads"`
@@ -100,22 +99,16 @@ func getCpuInfo() (string, int, int) {
 // Fetch CPU info from host
 //
 // Returns:
-//   - JSON string including the CPU model, core count, thread count and usage percentage
-func CPU() string {
+//   - Struct including the CPU model, core count, thread count and usage percentage
+func CPU() CpuMetrics {
 	model, threads, cores := getCpuInfo()
 
-	cpu := cpuMetrics{
+	cpu := CpuMetrics{
 		Model:   model,
 		Cores:   cores,
 		Threads: threads,
 		Usage:   getCpuUsage(),
 	}
 
-	jsonData, err := json.Marshal(cpu)
-	if err != nil {
-		helpers.LogError(fmt.Errorf("CPU(): Error marshaling to JSON: %w", err))
-		return ""
-	}
-
-	return string(jsonData)
+	return cpu
 }
