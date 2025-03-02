@@ -7,8 +7,8 @@ import (
 )
 
 type EndpointData struct {
-	CPU    metrics.CpuMetrics
-	System metrics.SystemMetrics
+	CPU    metrics.CpuMetrics    `json:"cpu"`
+	System metrics.SystemMetrics `json:"system"`
 }
 
 var data EndpointData
