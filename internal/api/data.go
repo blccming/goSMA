@@ -25,13 +25,13 @@ func updateData() {
 func StartUpdating() {
 	updateData() // Initial exection so actual data can be returned asap
 
-	ticker := time.NewTicker(3 * time.Second)
+	ticker := time.NewTicker(1000 * time.Millisecond)
 	defer ticker.Stop() // Stops timer when function exits
 
 	for {
 		select {
 		case <-ticker.C:
-			updateData()
+			go updateData() // Utilize go coroutine to make update interval more variable (some metric fetching function utilize sleep times)
 		}
 	}
 }
