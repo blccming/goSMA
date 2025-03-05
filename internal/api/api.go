@@ -38,5 +38,5 @@ func StartAPI() {
 	r.GET("/metrics/network", getNetworkMetrics)
 	r.GET("/metrics/system", getSystemMetrics)
 
-	r.Run("localhost:8080")
+	r.Run("0.0.0.0:8080")
 }

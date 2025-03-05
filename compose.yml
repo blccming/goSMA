@@ -1,0 +1,8 @@
+services:
+  gosma:
+    container_name: goSMA
+    build: .
+    restart: unless-stopped
+    network_mode: "host" # necessary for networking metrics
+    volumes:
+      - "/etc/os-release:/etc/os-release:ro" # provides the host's os instead of the container's
