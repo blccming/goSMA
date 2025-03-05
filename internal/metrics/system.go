@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -9,10 +10,26 @@ import (
 )
 
 type SystemMetrics struct {
+	Hostname     string  `json:"hostname"`
 	Distribution string  `json:"distribution"`
 	LinuxVersion string  `json:"linux_version"`
 	Uptime       float64 `json:"uptime"`
 	State        string  `json:"state"`
+}
+
+// Get hostname from either environment variable or /etc/hostname
+//
+// Returns:
+//   - Hostname
+func getHostname() string {
+	envHostname := os.Getenv("HOSTNAME")
+	if envHostname != "" {
+		return envHostname
+	}
+
+	etcHostname := string(helpers.ReadFile("/etc/hostname"))
+
+	return etcHostname
 }
 
 // Fetch PRETTY_NAME from /etc/os-release
@@ -68,6 +85,7 @@ func getUptime() float64 {
 //   - Struct including distribution, linux version and state (online)
 func System() SystemMetrics {
 	system := SystemMetrics{
+		Hostname:     getHostname(),
 		Distribution: getDistribution(),
 		LinuxVersion: getLinuxVersion(),
 		Uptime:       getUptime(),

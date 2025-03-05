@@ -8,4 +8,5 @@ services:
       - "/etc/os-release:/etc/os-release:ro" # provides the host's os instead of the container's
     environment:
       - PORT=8485 # standard goSMA port
-      - UPDATE_INTERVALL=1.5
+      - UPDATE_INTERVALL=1 # standard: 1 second; can take floating point numbers
+      - HOSTNAME # overwrites the hostname from /etc/hostname
