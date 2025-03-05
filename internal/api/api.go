@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,12 +32,16 @@ func getSystemMetrics(c *gin.Context) {
 
 func StartAPI() {
 	r := gin.Default()
-	r.GET("/health", healthCheck)
 
+	r.GET("/health", healthCheck)
 	r.GET("/metrics", getMetrics)
 	r.GET("/metrics/cpu", getCpuMetrics)
 	r.GET("/metrics/network", getNetworkMetrics)
 	r.GET("/metrics/system", getSystemMetrics)
 
-	r.Run("0.0.0.0:8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8485"
+	}
+	r.Run("0.0.0.0:" + port)
 }

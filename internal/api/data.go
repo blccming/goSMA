@@ -1,8 +1,12 @@
 package api
 
 import (
+	"fmt"
+	"os"
+	"strconv"
 	"time"
 
+	"github.com/blccming/goSMA/internal/helpers"
 	"github.com/blccming/goSMA/internal/metrics"
 )
 
@@ -27,8 +31,23 @@ func updateData() {
 func StartUpdating() {
 	updateData() // Initial exection so actual data can be returned asap
 
-	ticker := time.NewTicker(1000 * time.Millisecond)
-	defer ticker.Stop() // Stops timer when function exits
+	// Get update intervall from environment
+	updateIntervallString := os.Getenv("UPDATE_INTERVALL")
+	if updateIntervallString == "" {
+		updateIntervallString = "1.0"
+	}
+
+	updateIntervall, err := strconv.ParseFloat(updateIntervallString, 32)
+	if err != nil {
+		helpers.LogError(fmt.Errorf("StartUpdating(): Error while converting string to float: %w. Using 1.0 seconds as update intervall.", err))
+		updateIntervall = 1.0
+	}
+
+	// Starts ticker
+	ticker := time.NewTicker(time.Duration(updateIntervall*1000) * time.Millisecond)
+
+	// Stops ticker when function exits
+	defer ticker.Stop()
 
 	for {
 		select {

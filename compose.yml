@@ -6,3 +6,6 @@ services:
     network_mode: "host" # necessary for networking metrics
     volumes:
       - "/etc/os-release:/etc/os-release:ro" # provides the host's os instead of the container's
+    environment:
+      - PORT=8485 # standard goSMA port
+      - UPDATE_INTERVALL=1.5
