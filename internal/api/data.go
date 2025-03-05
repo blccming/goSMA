@@ -8,8 +8,8 @@ import (
 
 type EndpointData struct {
 	CPU     metrics.CpuMetrics     `json:"cpu"`
-	System  metrics.SystemMetrics  `json:"system"`
 	Network metrics.NetworkMetrics `json:"network"`
+	System  metrics.SystemMetrics  `json:"system"`
 }
 
 var data EndpointData
@@ -18,8 +18,8 @@ var data EndpointData
 func updateData() {
 	data = EndpointData{
 		CPU:     metrics.CPU(),
-		System:  metrics.System(),
 		Network: metrics.Network(),
+		System:  metrics.System(),
 	}
 }
 
