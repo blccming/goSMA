@@ -12,6 +12,7 @@ import (
 
 type EndpointData struct {
 	CPU     metrics.CpuMetrics     `json:"cpu"`
+	Memory  metrics.MemoryMetrics  `json:"memory"`
 	Network metrics.NetworkMetrics `json:"network"`
 	System  metrics.SystemMetrics  `json:"system"`
 }
@@ -22,6 +23,7 @@ var data EndpointData
 func updateData() {
 	data = EndpointData{
 		CPU:     metrics.CPU(),
+		Memory:  metrics.Memory(),
 		Network: metrics.Network(),
 		System:  metrics.System(),
 	}
