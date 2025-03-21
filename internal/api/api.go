@@ -34,6 +34,10 @@ func getSystemMetrics(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, getEndpointData().System)
 }
 
+func getTemperatureMetrics(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, getEndpointData().Temperature)
+}
+
 func StartAPI() {
 	r := gin.Default()
 
@@ -43,6 +47,7 @@ func StartAPI() {
 	r.GET("/metrics/memory", getMemoryMetrics)
 	r.GET("/metrics/network", getNetworkMetrics)
 	r.GET("/metrics/system", getSystemMetrics)
+	r.GET("/metrics/temperature", getTemperatureMetrics)
 
 	port := os.Getenv("PORT")
 	if port == "" {
