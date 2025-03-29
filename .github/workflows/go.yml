@@ -5,31 +5,30 @@ name: Go
 
 on:
   push:
-    branches: [ "main" ]
-    tags: [ 'v*.*.*' ]
+    branches: ["main"]
+    tags: ["v*.*.*"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.23.6'
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23.6"
 
-    - name: Build
-      run: go build -o goSMA ./...
-    
-    - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: ${{ github.ref }}  # Use the tag that triggered the workflow
-        files: goSMA  # Path to the binary
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for authentication
+      - name: Build
+        run: go build -o goSMA ./main.go
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }} # Use the tag that triggered the workflow
+          files: goSMA # Path to the binary
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token for authentication

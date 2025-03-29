@@ -5,8 +5,18 @@ This RESTful API allows for fetching metrics like CPU usage or network throughpu
 
 ![A diagram depicting goSMA's functionality](assets/goSMA.png)
 
-### How to run
-There's no binary available at the moment. Use `go run .` or utilize docker (`docker compose up --build`) to run goSMA.
+### Development
+```bash
+git clone https://github.com/blccming/goSMA
+cd ./goSMA
+# Using docker
+docker compose up --build
+# Running bare metal
+go run .
+```
+
+### Running
+Either use the docker-compose in `examples/standalone` via `docker compose up -d` or run the provided binary.
 
 ### Configuration
 goSMA makes use of environment variables for configuration:
