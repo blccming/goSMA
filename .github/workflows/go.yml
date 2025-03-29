@@ -6,6 +6,7 @@ name: Go
 on:
   push:
     branches: [ "main" ]
+    tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
 
@@ -22,4 +23,13 @@ jobs:
         go-version: '1.23.6'
 
     - name: Build
-      run: go build -v ./...
+      run: go build -o goSMA ./...
+    
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref }}  # Use the tag that triggered the workflow
+        files: goSMA  # Path to the binary
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for authentication
