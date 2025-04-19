@@ -1,0 +1,60 @@
+services:
+  gosma:
+    container_name: monitoring-goSMA
+    image: ghcr.io/blccming/gosma:main
+    restart: unless-stopped
+    networks:
+      - monitoring_network
+    ports:
+      - "8485:8485"
+    volumes:
+      - "/etc/os-release:/etc/os-release:ro" # provides the host's os instead of the container's
+    environment:
+      - PORT=8485 # standard goSMA port
+      - UPDATE_INTERVALL=1 # standard: 1 second; can take floating point numbers
+      - HOSTNAME # overwrites the hostname from /etc/hostname
+
+  influxdb:
+    container_name: monitoring-influxdb
+    image: influxdb:2
+    env_file:
+      - influxv2.env
+    volumes:
+      # Mount for influxdb data directory and configuration
+      - influxdbv2:/var/lib/influxdb2:rw
+    ports:
+      - "8086:8086"
+    networks:
+      - monitoring_network
+
+  telegraf:
+    container_name: monitoring-telegraf
+    image: telegraf:1.34-alpine
+    depends_on:
+      - influxdb
+    volumes:
+      # Mount for telegraf config
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    env_file:
+      - influxv2.env
+    networks:
+      - monitoring_network
+
+  grafana:
+    container_name: monitoring-grafana
+    image: grafana/grafana
+    restart: unless-stopped
+    volumes:
+      - grafana:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring_network
+
+volumes:
+  influxdbv2:
+  grafana:
+
+networks:
+  monitoring_network:
+    driver: bridge
