@@ -14,6 +14,7 @@ type EndpointData struct {
 	CPU         metrics.CpuMetrics         `json:"cpu"`
 	Memory      metrics.MemoryMetrics      `json:"memory"`
 	Network     metrics.NetworkMetrics     `json:"network"`
+	Storage     metrics.StorageMetrics     `json:"storage"`
 	System      metrics.SystemMetrics      `json:"system"`
 	Temperature metrics.TemperatureMetrics `json:"temperature"`
 }
@@ -26,6 +27,7 @@ func updateData() {
 		CPU:         metrics.CPU(),
 		Memory:      metrics.Memory(),
 		Network:     metrics.Network(),
+		Storage:     metrics.Storage(),
 		System:      metrics.System(),
 		Temperature: metrics.Temperature(),
 	}

@@ -27,7 +27,7 @@ func getHostname() string {
 		return envHostname
 	}
 
-	etcHostname := string(helpers.ReadFile("/etc/hostname"))
+	etcHostname := helpers.ReadFileAsString("/etc/hostname")
 
 	return etcHostname
 }
@@ -37,7 +37,7 @@ func getHostname() string {
 // Returns:
 //   - Pretty name (e.g. "Fedora Linux 41 (Workstation Edition)")
 func getDistribution() string {
-	etcRelease := string(helpers.ReadFile("/etc/os-release"))
+	etcRelease := helpers.ReadFileAsString("/etc/os-release")
 
 	etcReleaseParts := strings.Split(etcRelease, "\n")
 
@@ -57,7 +57,7 @@ func getDistribution() string {
 // Returns:
 //   - Linux version (e.g. "6.13.4-200.fc41.x86_64")
 func getLinuxVersion() string {
-	procVersion := string(helpers.ReadFile("/proc/version"))
+	procVersion := helpers.ReadFileAsString("/proc/version")
 	linuxVersion := strings.Split(string(procVersion), " ")[2]
 
 	return linuxVersion
@@ -68,7 +68,7 @@ func getLinuxVersion() string {
 // Returns:
 //   - Uptime in seconds
 func getUptime() float64 {
-	procUptime := string(helpers.ReadFile("/proc/uptime"))
+	procUptime := helpers.ReadFileAsString("/proc/uptime")
 	uptimeString := strings.Split(procUptime, " ")[0]
 
 	uptimeFloat, err := strconv.ParseFloat(uptimeString, 64)

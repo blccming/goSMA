@@ -22,7 +22,7 @@ type CpuMetrics struct {
 //   - Total CPU time
 //   - Idle CPU time
 func getCpuTime() (int, int) {
-	procStat := string(helpers.ReadFile("/proc/stat")[:])
+	procStat := helpers.ReadFileAsString("/proc/stat")
 	statFirstLine := strings.Split(procStat, "\n")[0]
 
 	cpuTimesString := strings.Split(statFirstLine, " ")[2:] // remove "cpu" and extra space after "cpu"
@@ -70,7 +70,7 @@ func getCpuUsage() float32 {
 //   - Core count
 //   - Thread count
 func getCpuInfo() (string, int, int) {
-	procCpuinfo := string(helpers.ReadFile("/proc/cpuinfo"))
+	procCpuinfo := helpers.ReadFileAsString("/proc/cpuinfo")
 	procCpuInfoParts := strings.Split(procCpuinfo, "\n")
 
 	cpuinfoLineModel := procCpuInfoParts[4]

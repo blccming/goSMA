@@ -5,12 +5,12 @@ import (
 	"os"
 )
 
-func ReadFile(path string) []byte {
+func ReadFileAsString(path string) string {
 	content, err := os.ReadFile(path)
 	if err != nil {
 		LogError(fmt.Errorf("ReadFile(): Error while reading file: %w", err))
 	}
-	return content
+	return string(content)
 }
 
 func List(path string) []os.DirEntry {

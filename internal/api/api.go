@@ -30,6 +30,10 @@ func getNetworkMetrics(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, getEndpointData().Network)
 }
 
+func getStorageMetrics(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, getEndpointData().Storage)
+}
+
 func getSystemMetrics(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, getEndpointData().System)
 }
@@ -46,6 +50,7 @@ func StartAPI() {
 	r.GET("/metrics/cpu", getCpuMetrics)
 	r.GET("/metrics/memory", getMemoryMetrics)
 	r.GET("/metrics/network", getNetworkMetrics)
+	r.GET("/metrics/storage", getStorageMetrics)
 	r.GET("/metrics/system", getSystemMetrics)
 	r.GET("/metrics/temperature", getTemperatureMetrics)
 

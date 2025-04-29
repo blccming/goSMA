@@ -22,7 +22,7 @@ type NetworkMetrics struct {
 func parseNetDev() []string {
 	interfacePrefixes := []string{"enp", "wlp", "eth", "wlan"}
 
-	procNetDev := string(helpers.ReadFile("/proc/net/dev")[:])
+	procNetDev := helpers.ReadFileAsString("/proc/net/dev")
 	procNetDevLines := strings.Split(procNetDev, "\n")
 
 	// Filter out any line with interfaces that are not in interfacePrefixes

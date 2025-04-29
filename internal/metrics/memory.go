@@ -24,7 +24,7 @@ type MemoryMetrics struct {
 // Returns
 //   - A map: memory metric name:amount in kilobytes
 func parseProcMeminfo() map[string]int {
-	procMeminfo := string(helpers.ReadFile("/proc/meminfo"))
+	procMeminfo := helpers.ReadFileAsString("/proc/meminfo")
 
 	splittedMeminfo := strings.Split(procMeminfo, "\n")
 

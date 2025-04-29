@@ -24,7 +24,7 @@ func getHwonDevices() map[string]string {
 	hwmonList := helpers.ListAsString("/sys/class/hwmon")
 
 	for _, hwmon := range hwmonList {
-		deviceType := string(helpers.ReadFile("/sys/class/hwmon/" + hwmon + "/name"))
+		deviceType := helpers.ReadFileAsString("/sys/class/hwmon/" + hwmon + "/name")
 		devices[hwmon] = strings.Trim(deviceType, "\n")
 	}
 
@@ -49,7 +49,7 @@ func getTemperatures() map[string]float32 {
 		}
 
 		// parse temperature value
-		tempString := string(helpers.ReadFile("/sys/class/hwmon/" + hwmon + "/temp1_input"))
+		tempString := helpers.ReadFileAsString("/sys/class/hwmon/" + hwmon + "/temp1_input")
 		tempStringTimmed := strings.Trim(tempString, "\n")
 		tempInt, err := strconv.Atoi(tempStringTimmed)
 		if err != nil {
