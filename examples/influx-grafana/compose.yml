@@ -3,8 +3,7 @@ services:
     container_name: monitoring-goSMA
     image: ghcr.io/blccming/gosma:main
     restart: unless-stopped
-    networks:
-      - monitoring_network
+    network_mode: "host" # make networking stats accessible
     ports:
       - "8485:8485"
     volumes:
